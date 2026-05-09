@@ -19,6 +19,17 @@ export class UserRepository implements UserRepositoryInterface {
     return this.repository.findOne({ where: { username } });
   }
 
+  async search(query: string): Promise<User[]> {
+    return this.repository.createQueryBuilder('user')
+      .where('user.username ILike :query', { query: `%${query}%` })
+      .orWhere('user.email ILike :query', { query: `%${query}%` })
+      .getMany();
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.repository.find();
+  }
+
   async findById(id: string): Promise<User | null> {
     return this.repository.findOne({ where: { id } });
   }
