@@ -12,7 +12,7 @@ export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   name: string;
 
   @Column({

@@ -1,24 +1,35 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { ChatService } from '../../core/usecases/chat.service';
 import { JwtAuthGuard } from '../../../auth/presentation/middlewares/jwt-auth.guard';
-import { MessageType } from '../../core/entities/message.entity';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { CreateDirectChatDto, SendMessageDto } from './dto/chat.dto';
 
-@Controller('chats')
+@ApiTags('Chats')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@Controller('chats')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all rooms for the current user' })
+  @ApiResponse({ status: 200, description: 'List of user rooms retrieved successfully' })
   async getRooms(@Request() req) {
     return this.chatService.getUserRooms(req.user.id);
   }
 
   @Post('direct')
-  async createDirectChat(@Request() req, @Body() data: { targetUserId: string }) {
+  @ApiOperation({ summary: 'Create or get a direct chat with another user' })
+  @ApiResponse({ status: 201, description: 'Direct chat created or retrieved' })
+  async createDirectChat(@Request() req, @Body() data: CreateDirectChatDto) {
     return this.chatService.createDirectChat(req.user.id, data.targetUserId);
   }
 
   @Get(':roomId/messages')
+  @ApiOperation({ summary: 'Get messages for a specific room' })
+  @ApiResponse({ status: 200, description: 'Messages retrieved successfully' })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'offset', required: false, type: Number })
   async getMessages(
     @Request() req,
     @Param('roomId') roomId: string,
@@ -29,10 +40,12 @@ export class ChatController {
   }
 
   @Post(':roomId/messages')
+  @ApiOperation({ summary: 'Send a message to a room' })
+  @ApiResponse({ status: 201, description: 'Message sent successfully' })
   async sendMessage(
     @Request() req,
     @Param('roomId') roomId: string,
-    @Body() data: { content: string; type?: MessageType },
+    @Body() data: SendMessageDto,
   ) {
     return this.chatService.sendMessage(req.user.id, roomId, data.content, data.type);
   }

@@ -51,6 +51,16 @@ export class AuthService {
     };
   }
 
+  async logout(userId: string) {
+    const user = await this.userRepository.findById(userId);
+    if (user) {
+      user.status = 'OFFLINE';
+      user.last_seen = new Date();
+      await this.userRepository.save(user);
+    }
+    return { message: 'Logged out successfully' };
+  }
+
   async googleLogin(googleToken: string) {
     return { message: 'Google login logic goes here' };
   }

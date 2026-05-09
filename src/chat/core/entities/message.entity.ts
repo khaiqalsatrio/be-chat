@@ -16,10 +16,10 @@ export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   room_id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   sender_id: string;
 
   @Column({ type: 'text' })
@@ -32,10 +32,10 @@ export class Message {
   })
   type: MessageType;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   is_ai_generated: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   reply_to_id: string | null;
 
   @CreateDateColumn()

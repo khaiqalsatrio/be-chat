@@ -13,10 +13,10 @@ export class MessageStatus {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   message_id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   user_id: string;
 
   @Column({

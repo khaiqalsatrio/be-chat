@@ -12,10 +12,10 @@ export class RoomParticipant {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   room_id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   user_id: string;
 
   @Column({
