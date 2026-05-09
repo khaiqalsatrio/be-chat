@@ -13,10 +13,10 @@ Struktur proyek akan memisahkan *business logic* dari detail implementasi (seper
    * Berisi aturan bisnis spesifik aplikasi (misal: *flow* registrasi user, *flow* mengirim pesan, memanggil AI).
    * Berinteraksi dengan *Repository Interfaces*.
 3. **Interface Adapters (Controllers & Gateways)**
-   * Mengubah data dari format yang dipahami *Use Cases* ke format yang cocok untuk layer eksternal (misal: Express Request/Response, Socket.io Events).
-   * Tempat beradanya *Controllers*, *Middlewares*, dan *Data Transfer Objects (DTO)*.
+   * Mengubah data dari format yang dipahami *Use Cases* ke format yang cocok untuk layer eksternal (misal: NestJS Controllers, WebSockets Gateways).
+   * Tempat beradanya *Controllers*, *Gateways*, *Middlewares*, dan *Data Transfer Objects (DTO)*.
 4. **Infrastructure (Frameworks & Drivers)**
-   * Lapisan terluar yang berisi alat eksternal: Express.js Server, Socket.io Server, Prisma Client (Database), dan layanan pihak ketiga (OpenAI, Google Auth).
+   * Lapisan terluar yang berisi alat eksternal: NestJS Framework, TypeORM (Database), dan layanan pihak ketiga (OpenAI, Google Auth).
 
 ## 2. Gambaran Struktur Folder (Directory Tree)
 Penerapan *layer* di atas akan direpresentasikan dalam folder `src/` sebagai berikut:
@@ -29,28 +29,28 @@ src/
 │   ├── exceptions/     # Custom error classes (AppError, ValidationError)
 │   └── usecases/       # Business logic murni (AuthService, ChatService)
 ├── infrastructure/     # Layer Infrastruktur (Database, External API)
-│   ├── database/       # Konfigurasi Prisma Client & Schema
+│   ├── database/       # Konfigurasi TypeORM DataSource & Entities
 │   ├── repositories/   # Implementasi akses database (UserRepository, ChatRepository)
 │   └── services/       # Implementasi layanan luar (GoogleOAuthService, AIService)
-├── presentation/       # Layer Interface Adapters
-│   ├── controllers/    # Express REST Controllers & Socket Handlers
-│   ├── middlewares/    # Auth middleware, Error Handler
-│   └── routes/         # Definisi routing Express.js
-├── app.ts              # Setup awal Express dan middleware global
-└── server.ts           # Entry point utama (HTTP & Socket.io Server listen)
+├── presentation/       # Layer Interface Adapters (NestJS Decorators)
+│   ├── controllers/    # NestJS REST Controllers
+│   ├── gateways/       # NestJS WebSockets Gateways
+│   └── middlewares/    # Guards, Interceptors, Error Filters
+├── app.module.ts       # Root Module NestJS (Wiring up layers)
+└── main.ts             # Entry point utama (Bootstrap NestJS)
 ```
 
 ## 3. Prinsip Clean Code yang Diterapkan
 
 1. **SOLID Principles**:
-   * **S**ingle Responsibility: Satu *class/function* hanya memiliki satu alasan untuk berubah (misal: Controller hanya menangani request HTTP, validasi, dan memanggil Service; tidak melakukan query DB langsung).
-   * **D**ependency Inversion: *Service* bergantung pada *interface repository*, bukan implementasi database langsung.
+   * **S**ingle Responsibility: Satu *class/function* hanya memiliki satu alasan untuk berubah (misal: Controller hanya menangani request, validasi via DTO, dan memanggil Service).
+   * **D**ependency Inversion: *Service* bergantung pada *interface repository*, memanfaatkan **Dependency Injection** bawaan NestJS.
 2. **Penamaan yang Deskriptif**:
    * Menghindari singkatan membingungkan (gunakan `getUserById` daripada `getUsr`).
    * Penamaan variabel boolean menggunakan *prefix* `is`, `has`, `should` (misal: `isAiGenerated`, `hasPermission`).
 3. **Penanganan Error (Error Handling) Terpusat**:
-   * Tidak melempar error string polos, melainkan menggunakan `Custom Error Classes` (seperti `NotFoundError`, `UnauthorizedError`).
-   * Menggunakan *Global Error Handler Middleware* di Express agar format response error selalu seragam dan rapi.
+   * Menggunakan `Exceptions Filter` di NestJS agar format response error selalu seragam.
+   * Menggunakan *Custom Exceptions* (seperti `NotFoundException`).
 4. **Validasi Kuat (Strong Typing & Validation)**:
    * Memanfaatkan **TypeScript** secara maksimal (hindari tipe `any`).
    * Semua input dari User (Body, Query, Params) wajib divalidasi ketat di level Controller menggunakan *library* seperti **Zod** sebelum diproses lebih lanjut oleh Use Cases.

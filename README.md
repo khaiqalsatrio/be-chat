@@ -16,13 +16,13 @@ Sistem backend chat *real-time* yang tangguh, modular, dan dirancang untuk melay
 Proyek ini menggunakan *stack* standar industri modern untuk backend Node.js:
 
 * **Bahasa**: TypeScript (Node.js)
-* **Framework**: Express.js
-* **Komunikasi Real-Time**: Socket.io
+* **Framework**: NestJS (Node.js)
+* **Komunikasi Real-Time**: NestJS WebSockets (Socket.io)
 * **Database**: PostgreSQL
-* **ORM**: Prisma
-* **Keamanan**: JSON Web Tokens (JWT), bcrypt, Google Auth Library.
-* **Task Queue / Background Jobs**: BullMQ (Redis) / node-cron (untuk pengingat agenda).
-* **Validasi**: Zod.
+* **ORM**: TypeORM
+* **Keamanan**: Passport.js, JWT, bcrypt, Google Auth Library.
+* **Task Queue / Background Jobs**: BullMQ (Redis) / NestJS Schedule (Cron).
+* **Validasi**: Class-validator / Zod.
 
 ## 📂 Struktur Dokumen Perencanaan
 

@@ -5,14 +5,14 @@ Berdasarkan spesifikasi di `SPEC/chat_system_spec.md`, berikut adalah rencana be
 ## 1. Persiapan Lingkungan & Teknologi (Tech Stack)
 Berdasarkan kesepakatan, kita akan menggunakan *stack* teknologi berikut:
 * **Bahasa**: TypeScript (Node.js)
-* **Framework Backend**: Express.js
+* **Framework Backend**: NestJS
 * **Database**: PostgreSQL
-* **ORM**: Prisma
+* **ORM**: TypeORM
 * **Security & Auth Tools**: 
   - `bcrypt` untuk hashing password.
-  - `jsonwebtoken` (JWT) untuk membuat dan memvalidasi token.
-  - `google-auth-library` untuk menangani verifikasi token Google Login (OAuth).
-  - `zod` untuk validasi input data.
+  - `@nestjs/jwt` untuk membuat dan memvalidasi token.
+  - `passport`, `passport-jwt`, `passport-google-oauth20` untuk strategi autentikasi.
+  - `zod` atau `class-validator` untuk validasi input data.
 
 ## 2. Pembuatan Model / Skema Database
 Berdasarkan spesifikasi dasar, kita perlu mendefinisikan skema tabel `users`:
