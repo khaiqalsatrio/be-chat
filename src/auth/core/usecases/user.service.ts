@@ -42,4 +42,17 @@ export class UserService {
     const { password_hash, ...result } = user;
     return result;
   }
+
+  async updateProfile(id: string, updateData: { username?: string; bio?: string; avatar_url?: string }): Promise<Partial<User> | null> {
+    const user = await this.userRepository.findById(id);
+    if (!user) return null;
+
+    if (updateData.username) user.username = updateData.username;
+    if (updateData.bio !== undefined) user.bio = updateData.bio;
+    if (updateData.avatar_url) user.avatar_url = updateData.avatar_url;
+
+    const updatedUser = await this.userRepository.save(user);
+    const { password_hash, ...result } = updatedUser;
+    return result;
+  }
 }

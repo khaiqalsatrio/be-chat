@@ -17,6 +17,9 @@ export class User {
   @Column({ type: 'varchar', nullable: true, unique: true })
   google_id: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  bio: string | null;
+
   @Column({ type: 'varchar', nullable: true })
   avatar_url: string | null;
 
